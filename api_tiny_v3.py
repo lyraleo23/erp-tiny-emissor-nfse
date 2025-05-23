@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-def obter_pedidos_v3(ACCESS_TOKEN, PARAMS):
+def get_orders_v3(ACCESS_TOKEN, PARAMS):
     offset = 0
     total = 100
     lista_pedidos = []
@@ -34,20 +34,7 @@ def obter_pedidos_v3(ACCESS_TOKEN, PARAMS):
     
     return lista_pedidos
 
-def obter_pedido_v3(ACCESS_TOKEN, id_pedido):
-    url = f'https://api.tiny.com.br/public-api/v3/pedidos/{id_pedido}'
-
-    payload = ''
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {ACCESS_TOKEN}'
-    }
-
-    response = requests.request("GET", url, headers=headers, data=payload)
-    response = response.json()
-    return response
-
-def obter_marcadores_v3(ACCESS_TOKEN, id_pedido):
+def get_markers_v3(ACCESS_TOKEN, id_pedido):
     url = f'https://api.tiny.com.br/public-api/v3/pedidos/{id_pedido}/marcadores'
 
     headers = {
@@ -59,9 +46,8 @@ def obter_marcadores_v3(ACCESS_TOKEN, id_pedido):
     response = response.json()
     return response
 
-def incluir_marcadores_v3(ACCESS_TOKEN, id_pedido, marcadores):
+def add_markers_v3(ACCESS_TOKEN, id_pedido, marcadores):
     url = f'https://api.tiny.com.br/public-api/v3/pedidos/{id_pedido}/marcadores'
-    print(url)
 
     headers = {
         'Content-Type': 'application/json',
@@ -70,5 +56,4 @@ def incluir_marcadores_v3(ACCESS_TOKEN, id_pedido, marcadores):
     payload = json.dumps(marcadores)
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    response = response.text
     return response

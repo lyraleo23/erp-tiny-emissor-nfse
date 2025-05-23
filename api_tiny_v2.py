@@ -1,22 +1,26 @@
 import requests
 import json
+import re
 
-def incluir_nota_servico(TOKEN_TINY, pedido, percentual_iss):
+def add_service_invoice(TOKEN_TINY, pedido, percentual_iss):
+    def sanitize_string(input_string):
+        return re.sub(r'[^a-zA-Z0-9]', '', input_string)
+
     nfse = json.dumps({
         'nota_servico': {
             'cliente': {
                 'codigo': pedido['cliente']['codigo'],
-                'nome': pedido['cliente']['nome'],
+                'nome': sanitize_string(pedido['cliente']['nome']),
                 'tipo_pessoa': pedido['cliente']['tipoPessoa'],
                 'cpf_cnpj': pedido['cliente']['cpfCnpj'],
-                'endereco': pedido['cliente']['endereco']['endereco'],
-                'numero': pedido['cliente']['endereco']['numero'],
-                'complemento': pedido['cliente']['endereco']['complemento'],
-                'bairro': pedido['cliente']['endereco']['bairro'],
-                'cep': pedido['cliente']['endereco']['cep'],
-                'cidade': pedido['cliente']['endereco']['municipio'],
-                'uf': pedido['cliente']['endereco']['uf'],
-                'fone': pedido['cliente']['telefone'],
+                'endereco': sanitize_string(pedido['cliente']['endereco']['endereco']),
+                'numero': sanitize_string(pedido['cliente']['endereco']['numero']),
+                'complemento': sanitize_string(pedido['cliente']['endereco']['complemento']),
+                'bairro': sanitize_string(pedido['cliente']['endereco']['bairro']),
+                'cep': sanitize_string(pedido['cliente']['endereco']['cep']),
+                'cidade': sanitize_string(pedido['cliente']['endereco']['municipio']),
+                'uf': sanitize_string(pedido['cliente']['endereco']['uf']),
+                'fone': sanitize_string(pedido['cliente']['telefone']),
                 'email': pedido['cliente']['email'],
                 'atualizar_cliente': 'N'
             },
@@ -43,11 +47,9 @@ def incluir_nota_servico(TOKEN_TINY, pedido, percentual_iss):
     payload = ''
 
     response = requests.request('POST', url, headers=headers, data=payload)
-    print(response)
-    print(response.text)
     return response.json()
 
-def enviar_nota_servico(TOKEN_TINY, id_nota):
+def send_service_invoice(TOKEN_TINY, id_nota):
     url = f'https://api.tiny.com.br/api2/nota.servico.enviar.php?token={TOKEN_TINY}&formato=json&id={id_nota}&enviarEmail=N'
     headers = {
         'Accept': 'application/json',
@@ -56,6 +58,4 @@ def enviar_nota_servico(TOKEN_TINY, id_nota):
     payload = ''
 
     response = requests.request('POST', url, headers=headers, data=payload)
-    print(response)
-    print(response.text)
-    return response.json()
+    return response

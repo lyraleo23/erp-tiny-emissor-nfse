@@ -2,7 +2,7 @@ import requests
 import json
 
 
-def obter_tokens_tiny(origin):
+def get_tiny_tokens(origin):
     url = f'https://api.fmiligrama.com/tiny/token?sorting='
 
     headers = {
@@ -18,8 +18,5 @@ def obter_tokens_tiny(origin):
         if token['origin'] == origin:
             access_token = token['access_token']
             refresh_token = token['refresh_token']
-    
-    # access_token = response[-1]['access_token']
-    # refresh_token = response[-1]['refresh_token']
 
     return access_token, refresh_token
